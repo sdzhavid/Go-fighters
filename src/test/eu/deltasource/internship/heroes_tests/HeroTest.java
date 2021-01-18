@@ -1,0 +1,92 @@
+package eu.deltasource.internship.heroes_tests;
+
+import eu.deltasource.internship.exceptions.InvalidHeroConstructorException;
+import eu.deltasource.internship.heroes.Assassin;
+import eu.deltasource.internship.heroes.Warrior;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.function.Executable;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class HeroTest {
+
+    @Test
+    void enterArena() {
+    }
+
+    @Test
+    void testIfHeroAttackPointsAreZeroWhenCreated() {
+        // Given
+        Executable heroZeroAttackPointsCreation = () -> new Warrior(0, 200, 300);
+
+        // When
+        Exception actualException = assertThrows(InvalidHeroConstructorException.class,
+                heroZeroAttackPointsCreation);
+
+        // Then
+        String actualMessage = actualException.getMessage();
+        String expectedMessage = "A hero can't have zero attackPoints";
+        Assertions.assertEquals(actualMessage, expectedMessage);
+    }
+
+    @Test
+    void testIfHeroAttackPointsAreNegativeWhenCreated() {
+        // Give
+        Executable heroNegativeAttackPointsCreation = () -> new Assassin(-2, 200, 300);
+
+        // When
+        Exception actualException = assertThrows(InvalidHeroConstructorException.class,
+                heroNegativeAttackPointsCreation);
+
+        // Then
+        String actualMessage = actualException.getMessage();
+        String expectedMessage = "A hero can't have negative attackPoints";
+        Assertions.assertEquals(actualMessage, expectedMessage);
+    }
+
+    @Test
+    void testIfHeroHealthPointsAreZeroWhenCreated() {
+        // Give
+        Executable heroZeroHealthPointsCreation = () -> new Assassin(30, 0, 300);
+
+        // When
+        Exception actualException = assertThrows(InvalidHeroConstructorException.class,
+                heroZeroHealthPointsCreation);
+
+        // Then
+        String actualMessage = actualException.getMessage();
+        String expectedMessage = "A hero can't have zero healthPoints when created.";
+        Assertions.assertEquals(actualMessage, expectedMessage);
+    }
+
+    @Test
+    void testIfHeroHealthPointsAreNegativeWhenCreated() {
+        // Give
+        Executable heroNegativeHealthPointsCreation = () -> new Assassin(30, -2, 300);
+
+        // When
+        Exception actualException = assertThrows(InvalidHeroConstructorException.class,
+                heroNegativeHealthPointsCreation);
+
+        // Then
+        String actualMessage = actualException.getMessage();
+        String expectedMessage = "A hero can't have negative healthPoints when created";
+        Assertions.assertEquals(actualMessage, expectedMessage);
+    }
+
+    @Test
+    void testIfHeroArmorPointsAreNegative() {
+        // Give
+        Executable heroNegativeArmorPointsCreation = () -> new Assassin(30, 300, -3);
+
+        // When
+        Exception actualException = assertThrows(InvalidHeroConstructorException.class,
+                heroNegativeArmorPointsCreation);
+
+        // Then
+        String actualMessage = actualException.getMessage();
+        String expectedMessage = "A hero can't have negative armorPoints";
+        Assertions.assertEquals(actualMessage, expectedMessage);
+    }
+}
