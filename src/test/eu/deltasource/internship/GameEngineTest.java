@@ -6,7 +6,6 @@ import eu.deltasource.internship.heroes.Warrior;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -17,11 +16,6 @@ public class GameEngineTest {
     @BeforeEach
     void initGameEngine(){
         gameEngine = new GameEngine();
-    }
-
-    @Test
-    void testStartGame(){
-        // to be implemented
     }
 
     @Test
