@@ -12,10 +12,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class HeroTest {
 
     @Test
-    void enterArena() {
-    }
-
-    @Test
     void testIfHeroAttackPointsAreZeroWhenCreated() {
         // Given
         Executable heroZeroAttackPointsCreation = () -> new Warrior(0, 200, 300);

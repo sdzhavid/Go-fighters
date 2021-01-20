@@ -7,8 +7,9 @@ import org.junit.jupiter.api.RepeatedTest;
 import static org.junit.jupiter.api.Assertions.*;
 
 class WarriorTest {
-    Warrior warrior;
-
+    private Warrior warrior;
+    private double LOWER_LIMIT_PERCENTAGE = 0.8;
+    private double UPPER_LIMIT_PERCENTAGE = 1.2;
 
     @BeforeEach
     void initializeWarrior() {
@@ -16,22 +17,22 @@ class WarriorTest {
     }
 
     @RepeatedTest(500)
-    void warriorAttackHeroShouldReturnProperDamageInflicted() {
+    void warriorNormalAttackHeroShouldReturnProperDamageInflicted() {
         // Given
 
         // When
         warrior.attack();
 
         // Then
-        int expectedMinimalDamageBeforeDefense = (int) (warrior.getAttackPoints() * 0.8);
-        int expectedMaximumDamageBeforeDefense = (int) (warrior.getAttackPoints() * 1.2);
+        int expectedMinimalDamageBeforeDefense = (int) (warrior.getAttackPoints() * LOWER_LIMIT_PERCENTAGE);
+        int expectedMaximumDamageBeforeDefense = (int) (warrior.getAttackPoints() * UPPER_LIMIT_PERCENTAGE);
         int actualDamageBeforeDefense = warrior.attack();
         assertTrue(actualDamageBeforeDefense >= expectedMinimalDamageBeforeDefense &&
                 actualDamageBeforeDefense <= expectedMaximumDamageBeforeDefense);
     }
 
     @RepeatedTest(500)
-    void warriorDefendFromHeroShouldReduceHealthPointsCorrectly() {
+    void warriorNormalDefendFromHeroShouldReduceHealthPointsCorrectly() {
         // Given
         Warrior warriorThatHasAttacked = new Warrior(2000, 300, 200);
         int damageInflictedBeforeDefense = warriorThatHasAttacked.attack();
@@ -43,10 +44,10 @@ class WarriorTest {
         // Then
 
         int expectedMinHealthRemaining = (int) (startingHealthPoints - (damageInflictedBeforeDefense -
-                warrior.getArmorPoints() * 0.8));
+                warrior.getArmorPoints() * LOWER_LIMIT_PERCENTAGE));
 
         int expectedMaxHealthRemaining = (int) (startingHealthPoints - (damageInflictedBeforeDefense -
-                warrior.getArmorPoints() * 1.2));
+                warrior.getArmorPoints() * UPPER_LIMIT_PERCENTAGE));
 
         int actualHealthRemaining = (int) (startingHealthPoints - (damageInflictedBeforeDefense -
                 warrior.getArmorPoints() * warrior.getRandomPercentageBetween80And120()));

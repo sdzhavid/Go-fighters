@@ -1,6 +1,5 @@
 package eu.deltasource.internship.heroes;
 
-import eu.deltasource.internship.arenas.Arena;
 import eu.deltasource.internship.exceptions.InvalidHeroConstructorException;
 
 import java.util.Random;
@@ -9,7 +8,6 @@ import java.util.Random;
  * Provides a partial functionality required for {@link Hero}s.
  * <p>
  * Every Hero has 3 attributes attackPoints, healthPoints and armorPoints.
- * A hero can attack, defend and enter an {@link Arena}
  * </p>
  * <p>
  * Methods that may be overridden for each Hero are
@@ -18,10 +16,13 @@ import java.util.Random;
  */
 public abstract class Hero {
 
+    private final static int numberToDetermineRandomBorder = 41;
+
     private Random random = new Random();
     private int attackPoints;
     private int healthPoints;
     private int armorPoints;
+    private boolean isHeroAlive;
 
     /**
      * Constructs a Hero with the specified attributes.
@@ -35,35 +36,33 @@ public abstract class Hero {
         this.attackPoints = attackPoints;
         this.healthPoints = healthPoints;
         this.armorPoints = armorPoints;
+        isHeroAlive = true;
     }
 
-    /**
-     * Returns the attack points of a Hero
-     *
-     * @return the attack points of the Hero
-     */
     public int getAttackPoints() {
         return attackPoints;
     }
 
-    /**
-     * Returns the armor points of a Hero
-     *
-     * @return the armor points of the Hero
-     */
     public int getArmorPoints() {
         return armorPoints;
     }
 
-    /**
-     * Returns the health points of a hero
-     *
-     * @return the armor points of the Hero
-     */
-
     public int getHealthPoints() {
         return healthPoints;
     }
+
+    public boolean isHeroAlive() {
+        if (healthPoints <= 0) {
+            return false;
+        }
+        return isHeroAlive;
+    }
+
+    public void setHeroAlive(boolean isDead) {
+        this.isHeroAlive = isDead;
+    }
+
+    public abstract String getHeroType();
 
     /**
      * Reduces the health points by the damage dealt from an attack.
@@ -74,15 +73,10 @@ public abstract class Hero {
         if (damageDealt >= 0) {
             healthPoints = healthPoints - damageDealt;
         }
-    }
-
-    /**
-     * Enters an {@link Arena} in order to fight
-     *
-     * @param arenaToBeJoined the arena to be joined
-     */
-    protected void enterArena(Arena arenaToBeJoined) {
-        return;
+        if (healthPoints < 0) {
+            healthPoints = 0;
+            setHeroAlive(false);
+        }
     }
 
     /**
@@ -91,9 +85,18 @@ public abstract class Hero {
      * @return the random percentage,
      */
     public double getRandomPercentageBetween80And120() {
-        double randomPercentageOfDamageInflicted = random.nextInt(120 - 80 + 1) + 80;
-        randomPercentageOfDamageInflicted = randomPercentageOfDamageInflicted / 100;
-        return randomPercentageOfDamageInflicted;
+        double randomPercentageOfDamageInflicted = random.nextInt(numberToDetermineRandomBorder) + 80;
+        return getValueInPercents(randomPercentageOfDamageInflicted);
+    }
+
+    /**
+     * Converts the value from a whole number to percents.
+     *
+     * @param randomPercentage the percentage as a whole number
+     * @return the value in percents
+     */
+    public double getValueInPercents(double randomPercentage) {
+        return randomPercentage / 100;
     }
 
     /**
@@ -106,18 +109,48 @@ public abstract class Hero {
      */
     private void validateHero(int attackPoints, int healthPoints, int armorPoints)
             throws InvalidHeroConstructorException {
+        validateAttackPoints(attackPoints);
+        validateHealthPoints(healthPoints);
+        validateArmorPoints(armorPoints);
+    }
+
+    /**
+     * Validates the {@link Hero} attack points
+     *
+     * @param attackPoints to be checked
+     * @throws InvalidHeroConstructorException when a hero is initialized with 0 or negative attack points.
+     */
+    private void validateAttackPoints(int attackPoints) throws InvalidHeroConstructorException {
         if (attackPoints == 0) {
             throw new InvalidHeroConstructorException("A hero can't have zero attackPoints");
         }
         if (attackPoints < 0) {
             throw new InvalidHeroConstructorException("A hero can't have negative attackPoints");
         }
+    }
+
+    /**
+     * Validates the {@link Hero} health points.
+     *
+     * @param healthPoints to be checked
+     * @throws InvalidHeroConstructorException when a hero is initialized with 0 or negative health points.
+     */
+    private void validateHealthPoints(int healthPoints) throws InvalidHeroConstructorException {
         if (healthPoints == 0) {
             throw new InvalidHeroConstructorException("A hero can't have zero healthPoints when created.");
         }
         if (healthPoints < 0) {
             throw new InvalidHeroConstructorException("A hero can't have negative healthPoints when created");
         }
+    }
+
+    /**
+     * Validates the {@link Hero} armor points.
+     *
+     * @param armorPoints to be checked
+     * @throws InvalidHeroConstructorException when a hero is initialized with negative armor points.
+     */
+    private void validateArmorPoints(int armorPoints) throws InvalidHeroConstructorException {
         if (armorPoints < 0) {
             throw new InvalidHeroConstructorException("A hero can't have negative armorPoints");
         }
@@ -131,7 +164,7 @@ public abstract class Hero {
      * @return the damage dealt to the hero
      */
     public int defend(int damageFromAttackBeforeDefense) {
-        int damageInflicted = damageFromAttackBeforeDefense - (int) (getArmorPoints() * getRandomPercentageBetween80And120());
+        int damageInflicted = damageFromAttackBeforeDefense - getActualDefense();
         if (damageInflicted < 0) {
             damageInflicted = 0;
             return damageInflicted;
@@ -146,8 +179,7 @@ public abstract class Hero {
      * @return the Points that will be used in {@link #defend(int)} to take health points away from the attacked Hero.
      */
     public int attack() {
-        int damageBeforeDefense = (int) (getAttackPoints() * getRandomPercentageBetween80And120());
-        return damageBeforeDefense;
+        return getActualDamageToInflict();
     }
 
     /**
@@ -158,7 +190,24 @@ public abstract class Hero {
      */
     public double getRandomChance() {
         int randomChance = 100;
-        double dropNumber = random.nextInt(randomChance);
-        return dropNumber / 100;
+        return getValueInPercents(randomChance);
+    }
+
+    /**
+     * The actual damage that will be done in an attack.
+     *
+     * @return the actual damage inflicted
+     */
+    private int getActualDamageToInflict() {
+        return (int) (getAttackPoints() * getRandomPercentageBetween80And120());
+    }
+
+    /**
+     * The actual defense to be reduced from the actual attack.
+     *
+     * @return the actual defense to reduce the attack
+     */
+    private int getActualDefense() {
+        return (int) (getArmorPoints() * getRandomPercentageBetween80And120());
     }
 }
