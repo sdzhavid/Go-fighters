@@ -1,8 +1,5 @@
-package eu.deltasource.internship.heroes_tests;
+package eu.deltasource.internship.heroes;
 
-import eu.deltasource.internship.heroes.Assassin;
-import eu.deltasource.internship.heroes.Hero;
-import eu.deltasource.internship.heroes.Warrior;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 
@@ -14,10 +11,13 @@ class AssassinTest {
     private int DAMAGE_INCREASE_MULTIPLIER = 3;
     private double LOWER_LIMIT_PERCENTAGE = 0.8;
     private double UPPER_LIMIT_PERCENTAGE = 1.2;
+    private int startingHealthPoints;
+    private Warrior warriorThatHasAttacked = new Warrior(2000, 300, 200);;
 
     @BeforeEach
-    void initAssassin() {
+    void initializeAssassin() {
         assassin = new Assassin(100, 1000, 30);
+        startingHealthPoints = assassin.getHealthPoints();
     }
 
     @RepeatedTest(500)
@@ -42,40 +42,42 @@ class AssassinTest {
     @RepeatedTest(500)
     void assassinNormalAttackHeroShouldReturnProperDamageInflicted() {
         // Given
+        Hero hero = spy(assassin);
+        double chanceAboveCritical = 0.4;
 
         // When
-        assassin.attack();
+        when(hero.getRandomChance()).thenReturn(chanceAboveCritical);
+        hero.attack();
 
         // Then
-        int expectedMinimalDamageBeforeDefense = (int) (assassin.getAttackPoints() * LOWER_LIMIT_PERCENTAGE);
-        int expectedMaximumDamageBeforeDefense = (int) (assassin.getAttackPoints() * UPPER_LIMIT_PERCENTAGE);
-        int actualDamageBeforeDefense = assassin.attack();
-        assertTrue(actualDamageBeforeDefense >= expectedMinimalDamageBeforeDefense &&
-                actualDamageBeforeDefense <= expectedMaximumDamageBeforeDefense);
+        int expectedMinimalDamageBeforeDefense = (int) (hero.getAttackPoints() * LOWER_LIMIT_PERCENTAGE);
+        int expectedMaximumDamageBeforeDefense = (int) (hero.getAttackPoints() * UPPER_LIMIT_PERCENTAGE);
+        int actualDamageBeforeDefense = hero.attack();
+        assertTrue(actualDamageBeforeDefense >= expectedMinimalDamageBeforeDefense);
+        assertTrue(actualDamageBeforeDefense <= expectedMaximumDamageBeforeDefense);
     }
 
     @RepeatedTest(500)
     void assassinNormalDefendFromHeroShouldReduceHealthPointsCorrectly() {
         // Given
-        Warrior warriorThatHasAttacked = new Warrior(2000, 300, 200);
         int damageInflictedBeforeDefense = warriorThatHasAttacked.attack();
-        int startingHealthPoints = assassin.getHealthPoints();
 
         // When
         assassin.defend(damageInflictedBeforeDefense);
 
         // Then
 
-        int expectedMinHealthRemaining = (int) (startingHealthPoints - (damageInflictedBeforeDefense -
-                assassin.getArmorPoints() * LOWER_LIMIT_PERCENTAGE));
+        int expectedMinHealthRemaining = getHealthAtBorder(LOWER_LIMIT_PERCENTAGE, damageInflictedBeforeDefense);
 
-        int expectedMaxHealthRemaining = (int) (startingHealthPoints - (damageInflictedBeforeDefense -
-                assassin.getArmorPoints() * UPPER_LIMIT_PERCENTAGE));
+        int expectedMaxHealthRemaining = getHealthAtBorder(UPPER_LIMIT_PERCENTAGE, damageInflictedBeforeDefense);
 
-        int actualHealthRemaining = (int) (startingHealthPoints - (damageInflictedBeforeDefense -
-                assassin.getArmorPoints() * assassin.getRandomPercentageBetween80And120()));
+        int actualHealthRemaining = getHealthAtBorder(assassin.getRandomPercentageBetween80And120(),
+                damageInflictedBeforeDefense);
 
-        assertTrue(actualHealthRemaining >= expectedMinHealthRemaining &&
-                actualHealthRemaining <= expectedMaxHealthRemaining);
+        assertTrue(actualHealthRemaining >= expectedMinHealthRemaining);
+        assertTrue(actualHealthRemaining <= expectedMaxHealthRemaining);
+    }
+    private int getHealthAtBorder(double limitPercentage, int damageInflicted){
+        return (int) (startingHealthPoints - (damageInflicted - assassin.getArmorPoints() * limitPercentage));
     }
 }

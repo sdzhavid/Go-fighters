@@ -15,6 +15,7 @@ import eu.deltasource.internship.heroes.special.abilities.SpecialDefense;
 public class Monk extends Hero implements SpecialDefense {
 
     private static final double DODGE_CHANCE = 0.3;
+    private static final int ZERO_DAMAGE_INFLICTED = 0;
 
     private String heroType;
 
@@ -27,7 +28,14 @@ public class Monk extends Hero implements SpecialDefense {
      */
     public Monk(int attackPoints, int healthPoints, int armorPoints) {
         super(attackPoints, healthPoints, armorPoints);
-        this.heroType = "Monk";
+        this.heroType = this.getClass().getSimpleName();
+    }
+
+    /**
+     * Creates a monk with default values for {@see attackPoints}, {@see healthPoints} and {@see armorPoints}
+     */
+    public Monk() {
+        this(200, 1200, 150);
     }
 
     @Override
@@ -44,8 +52,8 @@ public class Monk extends Hero implements SpecialDefense {
      */
     @Override
     public int defend(int damageFromAttackBeforeDefense) {
-        if (getRandomChance() <= DODGE_CHANCE) {
-            specialDefense();
+        if (isACompleteDefense(DODGE_CHANCE)) {
+            return specialDefense();
         }
         return super.defend(damageFromAttackBeforeDefense);
     }
@@ -58,6 +66,6 @@ public class Monk extends Hero implements SpecialDefense {
      */
     @Override
     public int specialDefense() {
-        return super.defend(0);
+        return super.defend(ZERO_DAMAGE_INFLICTED);
     }
 }

@@ -23,11 +23,20 @@ public class Warrior extends Hero {
      */
     public Warrior(int attackPoints, int healthPoints, int armorPoints) {
         super(attackPoints, healthPoints, armorPoints);
-        this.heroType = "Warrior";
+        this.heroType = this.getClass().getSimpleName();
+    }
+
+    public Warrior() {
+        this(200, 2000, 150);
     }
 
     @Override
     public String getHeroType() {
         return heroType;
+    }
+
+    public static void main(String[] args) {
+        Warrior warrior = new Warrior(100,2,3);
+        System.out.println(warrior.attack());
     }
 }

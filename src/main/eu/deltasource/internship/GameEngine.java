@@ -21,7 +21,7 @@ public class GameEngine {
 
     /**
      * Starts the game by initializing the two heroes when given as parameters.
-     * The game continues until one of the heroes has died which is done by {@link GameEngine#HeroIsKilled(Hero, Hero)}
+     * The game continues until one of the heroes has died which is done by {@link GameEngine#heroIsKilled(Hero, Hero)}
      * Each round is printed to the console by {@link GameEngine#printRound(Hero, int, Hero)}
      *
      * @param firstHero  to enter the arena
@@ -29,17 +29,25 @@ public class GameEngine {
      * @throws InterruptedException if the game was been interrupted during the fight.
      */
     public void startGame(Hero firstHero, Hero secondHero) throws InterruptedException {
+        printStartGameMessage(firstHero, secondHero);
         while (isGameOn) {
-            Thread.sleep(TIME_BETWEEN_ROUNDS_MILLISECONDS);
+            timeBetweenRounds(TIME_BETWEEN_ROUNDS_MILLISECONDS);
 
             int damageDealtByFirstHero = secondHero.defend(firstHero.attack());
-            System.out.println(printRound(firstHero, damageDealtByFirstHero, secondHero));
-            if (HeroIsKilled(secondHero, firstHero)) break;
+            printRound(firstHero, damageDealtByFirstHero, secondHero);
+
+            if (isHeroKilled(secondHero)) {
+                printWinnerMessage(firstHero);
+                break;
+            }
 
             int damageDealtBySecondHero = firstHero.defend(secondHero.attack());
-            System.out.println(printRound(secondHero, damageDealtBySecondHero, firstHero));
-            System.out.println("\n");
-            if (HeroIsKilled(firstHero, secondHero)) break;
+            printRound(secondHero, damageDealtBySecondHero, firstHero);
+
+            if (isHeroKilled(firstHero)) {
+                printWinnerMessage(secondHero);
+                break;
+            }
         }
     }
 
@@ -47,12 +55,10 @@ public class GameEngine {
      * Performs a check to decide whether or not a hero has been killed.
      *
      * @param heroToBeCheckedIfDead is the hero which might be killed
-     * @param heroWhichHasKilled    is the hero which have killed their enemy.
      * @return a boolean which describes if a hero is dead or not; true = alive, false = dead.
      */
-    private boolean HeroIsKilled(Hero heroToBeCheckedIfDead, Hero heroWhichHasKilled) {
+    private boolean isHeroKilled(Hero heroToBeCheckedIfDead) {
         if (!heroToBeCheckedIfDead.isHeroAlive()) {
-            System.out.println(heroWhichHasKilled.getHeroType() + " won the game");
             isGameOn = false;
             return true;
         }
@@ -67,14 +73,42 @@ public class GameEngine {
      * @param defendingHero the defending hero of the round.
      * @return the details of the round.
      */
-    private String printRound(Hero attackingHero, int damageDealt, Hero defendingHero) {
-        StringBuilder arenaRoundStringBuilder = new StringBuilder();
-        arenaRoundStringBuilder
-                .append(attackingHero.getHeroType())
-                .append(" attacked for ").append(damageDealt).append(", ")
-                .append(defendingHero.getHeroType()).append("'s remaining health is ")
-                .append(defendingHero.getHealthPoints());
-        String arenaRoundDetails = arenaRoundStringBuilder.toString();
-        return arenaRoundDetails;
+    private void printRound(Hero attackingHero, int damageDealt, Hero defendingHero) {
+        String arenaRoundDetails = attackingHero.getHeroType() +
+                " attacked for " + damageDealt + ", " +
+                defendingHero.getHeroType() + "'s remaining health is " +
+                defendingHero.getHealthPoints();
+        System.out.println(arenaRoundDetails);
+    }
+
+    /**
+     * Displays a welcoming message when the game begins
+     *
+     * @param firstHero to be displayed
+     * @param secondHero to be displayed
+     */
+    private void printStartGameMessage(Hero firstHero, Hero secondHero) {
+        String gameStartMessage = "The fight is starting NOW!! Fight is between ";
+        gameStartMessage += firstHero.getHeroType() + " and " + secondHero.getHeroType() + "!\n";
+        System.out.println(gameStartMessage);
+    }
+
+    /**
+     * Displays the winner of the fight
+     *
+     * @param heroWhichHasKilled the hero which has killed their opponent.
+     */
+    private void printWinnerMessage(Hero heroWhichHasKilled) {
+        System.out.println(heroWhichHasKilled.getHeroType() + " won the game");
+    }
+
+    /**
+     * This method makes a pause for a certain amount of time between the rounds.
+     *
+     * @param waitTime is the time to be waited in milliseconds
+     * @throws InterruptedException when the sleeping process is interrupted.
+     */
+    private void timeBetweenRounds(int waitTime) throws InterruptedException {
+        Thread.sleep(TIME_BETWEEN_ROUNDS_MILLISECONDS);
     }
 }

@@ -18,7 +18,8 @@ public class Knight extends Hero implements SpecialAttack, SpecialDefense {
 
     private static final double BLOCK_CHANCE = 0.2;
     private static final double CRITICAL_PERCENTAGE = 0.1;
-    private static final double CRITICAL_HIT_INCREASE = 2;
+    private static final double CRITICAL_HIT_MULTIPLIER = 2;
+    private static final int ZERO_DAMAGE_INFLICTED = 0;
 
     private String heroType;
 
@@ -31,7 +32,14 @@ public class Knight extends Hero implements SpecialAttack, SpecialDefense {
      */
     public Knight(int attackPoints, int healthPoints, int armorPoints) {
         super(attackPoints, healthPoints, armorPoints);
-        this.heroType = "Knight";
+        this.heroType = this.getClass().getSimpleName();
+    }
+
+    /**
+     * Creates a knight with default values for {@see attackPoints}, {@see healthPoints} and {@see armorPoints}
+     */
+    public Knight() {
+        this(90, 1600, 150);
     }
 
     @Override
@@ -47,8 +55,8 @@ public class Knight extends Hero implements SpecialAttack, SpecialDefense {
      */
     @Override
     public int attack() {
-        if (getRandomChance() <= CRITICAL_PERCENTAGE) {
-            specialAttack();
+        if (isACriticalAttack(CRITICAL_PERCENTAGE)) {
+            return specialAttack();
         }
         return super.attack();
     }
@@ -62,8 +70,8 @@ public class Knight extends Hero implements SpecialAttack, SpecialDefense {
      */
     @Override
     public int defend(int damageFromAttackBeforeDefense) {
-        if (getRandomChance() <= BLOCK_CHANCE) {
-            specialDefense();
+        if (isACompleteDefense(BLOCK_CHANCE)) {
+            return specialDefense();
         }
         return super.defend(damageFromAttackBeforeDefense);
     }
@@ -76,7 +84,7 @@ public class Knight extends Hero implements SpecialAttack, SpecialDefense {
      */
     @Override
     public int specialAttack() {
-        return (int) (super.attack() * CRITICAL_HIT_INCREASE);
+        return (int) (super.attack() * CRITICAL_HIT_MULTIPLIER);
     }
 
     /**
@@ -87,6 +95,6 @@ public class Knight extends Hero implements SpecialAttack, SpecialDefense {
      */
     @Override
     public int specialDefense() {
-        return super.defend(0);
+        return super.defend(ZERO_DAMAGE_INFLICTED);
     }
 }

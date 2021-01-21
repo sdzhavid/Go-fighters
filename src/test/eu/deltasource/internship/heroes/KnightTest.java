@@ -1,8 +1,5 @@
-package eu.deltasource.internship.heroes_tests;
+package eu.deltasource.internship.heroes;
 
-import eu.deltasource.internship.heroes.Hero;
-import eu.deltasource.internship.heroes.Knight;
-import eu.deltasource.internship.heroes.Warrior;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 
@@ -15,10 +12,12 @@ class KnightTest {
     private int DAMAGE_INCREASE_MULTIPLIER = 2;
     private double LOWER_LIMIT_PERCENTAGE = 0.8;
     private double UPPER_LIMIT_PERCENTAGE = 1.2;
+    int startingHealthPoints;
 
     @BeforeEach
-    void initKnight() {
+    void initializeKnight() {
         knight = new Knight(100, 1000, 40);
+        startingHealthPoints = knight.getHealthPoints();
     }
 
     @RepeatedTest(100)
@@ -55,23 +54,26 @@ class KnightTest {
         int expectedMaximumDamageBeforeDefense = (int) (hero.getAttackPoints() * UPPER_LIMIT_PERCENTAGE
                 * DAMAGE_INCREASE_MULTIPLIER);
         int actualDamageBeforeDefense = hero.attack();
-        assertTrue(actualDamageBeforeDefense >= expectedMinimalDamageBeforeDefense &&
-                actualDamageBeforeDefense <= expectedMaximumDamageBeforeDefense);
+        assertTrue(actualDamageBeforeDefense >= expectedMinimalDamageBeforeDefense);
+        assertTrue(actualDamageBeforeDefense<= expectedMaximumDamageBeforeDefense);
     }
 
     @RepeatedTest(500)
     void knightNormalAttackHeroShouldReturnProperDamageInflicted() {
         // Given
+        Hero hero = spy(knight);
+        double chanceAboveCritical = 0.4;
 
         // When
-        knight.attack();
+        when(hero.getRandomChance()).thenReturn(chanceAboveCritical);
+        hero.attack();
 
         // Then
-        int expectedMinimalDamageBeforeDefense = (int) (knight.getAttackPoints() * LOWER_LIMIT_PERCENTAGE);
-        int expectedMaximumDamageBeforeDefense = (int) (knight.getAttackPoints() * UPPER_LIMIT_PERCENTAGE);
-        int actualDamageBeforeDefense = knight.attack();
-        assertTrue(actualDamageBeforeDefense >= expectedMinimalDamageBeforeDefense &&
-                actualDamageBeforeDefense <= expectedMaximumDamageBeforeDefense);
+        int expectedMinimalDamageBeforeDefense = (int) (hero.getAttackPoints() * LOWER_LIMIT_PERCENTAGE);
+        int expectedMaximumDamageBeforeDefense = (int) (hero.getAttackPoints() * UPPER_LIMIT_PERCENTAGE);
+        int actualDamageBeforeDefense = hero.attack();
+        assertTrue(actualDamageBeforeDefense >= expectedMinimalDamageBeforeDefense);
+        assertTrue(actualDamageBeforeDefense <= expectedMaximumDamageBeforeDefense);
     }
 
     @RepeatedTest(500)
@@ -79,23 +81,24 @@ class KnightTest {
         // Given
         Warrior warriorThatHasAttacked = new Warrior(2000, 300, 200);
         int damageInflictedBeforeDefense = warriorThatHasAttacked.attack();
-        int startingHealthPoints = knight.getHealthPoints();
 
         // When
         knight.defend(damageInflictedBeforeDefense);
 
         // Then
 
-        int expectedMinHealthRemaining = (int) (startingHealthPoints - (damageInflictedBeforeDefense -
-                knight.getArmorPoints() * LOWER_LIMIT_PERCENTAGE));
+        int expectedMinHealthRemaining = getHealthAtBorder(LOWER_LIMIT_PERCENTAGE, damageInflictedBeforeDefense);
 
-        int expectedMaxHealthRemaining = (int) (startingHealthPoints - (damageInflictedBeforeDefense -
-                knight.getArmorPoints() * UPPER_LIMIT_PERCENTAGE));
+        int expectedMaxHealthRemaining = getHealthAtBorder(UPPER_LIMIT_PERCENTAGE, damageInflictedBeforeDefense);
 
-        int actualHealthRemaining = (int) (startingHealthPoints - (damageInflictedBeforeDefense -
-                knight.getArmorPoints() * knight.getRandomPercentageBetween80And120()));
+        int actualHealthRemaining = getHealthAtBorder(knight.getRandomPercentageBetween80And120(),
+                damageInflictedBeforeDefense);
 
-        assertTrue(actualHealthRemaining >= expectedMinHealthRemaining &&
-                actualHealthRemaining <= expectedMaxHealthRemaining);
+        assertTrue(actualHealthRemaining >= expectedMinHealthRemaining);
+        assertTrue(actualHealthRemaining <= expectedMaxHealthRemaining);
+    }
+
+    private int getHealthAtBorder(double limitPercentage, int damageInflicted){
+        return (int) (startingHealthPoints - (damageInflicted - knight.getArmorPoints() * limitPercentage));
     }
 }

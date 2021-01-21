@@ -6,8 +6,8 @@ import eu.deltasource.internship.heroes.special.abilities.SpecialAttack;
  * A shaman is {@link Hero} with a special attack and defense.
  *
  * <p>
- *     The special attack is a double attack.
- *     Because of his strong attack the {@link Shaman} takes always {@see DAMAGE_TAKEN_INCREASE} damage from an attack.
+ * The special attack is a double attack.
+ * Because of his strong attack the {@link Shaman} takes always {@see DAMAGE_TAKEN_INCREASE} damage from an attack.
  * </p>
  *
  * @author Samir Dzhavid
@@ -16,7 +16,7 @@ import eu.deltasource.internship.heroes.special.abilities.SpecialAttack;
 public class Shaman extends Hero implements SpecialAttack {
 
     private static final double DOUBLE_ATTACK_CHANCE = 0.7;
-    private static final double DAMAGE_TAKEN_INCREASE = 1.2;
+    private static final double DAMAGE_TAKEN_MULTIPLIER = 1.2;
 
     private String heroType;
 
@@ -29,7 +29,14 @@ public class Shaman extends Hero implements SpecialAttack {
      */
     public Shaman(int attackPoints, int healthPoints, int armorPoints) {
         super(attackPoints, healthPoints, armorPoints);
-        this.heroType = "Shaman";
+        this.heroType = this.getClass().getSimpleName();
+    }
+
+    /**
+     * Creates a shaman with default values for {@see attackPoints}, {@see healthPoints} and {@see armorPoints}
+     */
+    public Shaman() {
+        this(100, 1000, 200);
     }
 
     @Override
@@ -45,7 +52,7 @@ public class Shaman extends Hero implements SpecialAttack {
      */
     @Override
     public int attack() {
-        if (getRandomChance() <= DOUBLE_ATTACK_CHANCE) {
+        if (isACriticalAttack(DOUBLE_ATTACK_CHANCE)) {
             return specialAttack();
         }
         return super.attack();
@@ -60,7 +67,7 @@ public class Shaman extends Hero implements SpecialAttack {
      */
     @Override
     public int defend(int damageFromAttackBeforeDefense) {
-        return (int) (super.defend(damageFromAttackBeforeDefense) * DAMAGE_TAKEN_INCREASE);
+        return (int) (super.defend(damageFromAttackBeforeDefense) * DAMAGE_TAKEN_MULTIPLIER);
     }
 
     /**

@@ -7,8 +7,8 @@ package eu.deltasource.internship.exceptions;
  * @version January 2021
  */
 
-public class InvalidHeroConstructorException extends RuntimeException {
-    public InvalidHeroConstructorException(String message) {
+public class InvalidPassedParametersToHeroException extends RuntimeException {
+    public InvalidPassedParametersToHeroException(String message) {
         super(message);
     }
 }

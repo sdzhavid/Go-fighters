@@ -1,6 +1,6 @@
 package eu.deltasource.internship.heroes;
 
-import eu.deltasource.internship.exceptions.InvalidHeroConstructorException;
+import eu.deltasource.internship.exceptions.InvalidPassedParametersToHeroException;
 
 import java.util.Random;
 
@@ -16,7 +16,8 @@ import java.util.Random;
  */
 public abstract class Hero {
 
-    private final static int numberToDetermineRandomBorder = 41;
+    private final static int numberToDetermineRandomUpperBorder = 41;
+    private final static int numberToDetermineRandomLowerBorder = 80;
 
     private Random random = new Random();
     private int attackPoints;
@@ -39,6 +40,12 @@ public abstract class Hero {
         isHeroAlive = true;
     }
 
+    /**
+     * An empty constructor used for creating heroes with default values.
+     */
+    public Hero() {
+    }
+
     public int getAttackPoints() {
         return attackPoints;
     }
@@ -52,10 +59,7 @@ public abstract class Hero {
     }
 
     public boolean isHeroAlive() {
-        if (healthPoints <= 0) {
-            return false;
-        }
-        return isHeroAlive;
+        return isHeroAlive = healthPoints > 0;
     }
 
     public void setHeroAlive(boolean isDead) {
@@ -70,10 +74,10 @@ public abstract class Hero {
      * @param damageDealt the actual damage after resistance
      */
     public void reduceHealthPoints(int damageDealt) {
-        if (damageDealt >= 0) {
+        if (damageDealt > 0) {
             healthPoints = healthPoints - damageDealt;
         }
-        if (healthPoints < 0) {
+        if (healthPoints <= 0) {
             healthPoints = 0;
             setHeroAlive(false);
         }
@@ -85,7 +89,8 @@ public abstract class Hero {
      * @return the random percentage,
      */
     public double getRandomPercentageBetween80And120() {
-        double randomPercentageOfDamageInflicted = random.nextInt(numberToDetermineRandomBorder) + 80;
+        double randomPercentageOfDamageInflicted = random.nextInt(numberToDetermineRandomUpperBorder)
+                + numberToDetermineRandomLowerBorder;
         return getValueInPercents(randomPercentageOfDamageInflicted);
     }
 
@@ -105,10 +110,10 @@ public abstract class Hero {
      * @param attackPoints to be checked
      * @param healthPoints to be checked
      * @param armorPoints  to be chechked
-     * @throws InvalidHeroConstructorException when a hero isn't created with proper properties.
+     * @throws InvalidPassedParametersToHeroException when a hero isn't created with proper properties.
      */
     private void validateHero(int attackPoints, int healthPoints, int armorPoints)
-            throws InvalidHeroConstructorException {
+            throws InvalidPassedParametersToHeroException {
         validateAttackPoints(attackPoints);
         validateHealthPoints(healthPoints);
         validateArmorPoints(armorPoints);
@@ -118,14 +123,14 @@ public abstract class Hero {
      * Validates the {@link Hero} attack points
      *
      * @param attackPoints to be checked
-     * @throws InvalidHeroConstructorException when a hero is initialized with 0 or negative attack points.
+     * @throws InvalidPassedParametersToHeroException when a hero is initialized with 0 or negative attack points.
      */
-    private void validateAttackPoints(int attackPoints) throws InvalidHeroConstructorException {
+    private void validateAttackPoints(int attackPoints) throws InvalidPassedParametersToHeroException {
         if (attackPoints == 0) {
-            throw new InvalidHeroConstructorException("A hero can't have zero attackPoints");
+            throw new InvalidPassedParametersToHeroException("A hero can't have zero attackPoints");
         }
         if (attackPoints < 0) {
-            throw new InvalidHeroConstructorException("A hero can't have negative attackPoints");
+            throw new InvalidPassedParametersToHeroException("A hero can't have negative attackPoints");
         }
     }
 
@@ -133,14 +138,14 @@ public abstract class Hero {
      * Validates the {@link Hero} health points.
      *
      * @param healthPoints to be checked
-     * @throws InvalidHeroConstructorException when a hero is initialized with 0 or negative health points.
+     * @throws InvalidPassedParametersToHeroException when a hero is initialized with 0 or negative health points.
      */
-    private void validateHealthPoints(int healthPoints) throws InvalidHeroConstructorException {
+    private void validateHealthPoints(int healthPoints) throws InvalidPassedParametersToHeroException {
         if (healthPoints == 0) {
-            throw new InvalidHeroConstructorException("A hero can't have zero healthPoints when created.");
+            throw new InvalidPassedParametersToHeroException("A hero can't have zero healthPoints when created.");
         }
         if (healthPoints < 0) {
-            throw new InvalidHeroConstructorException("A hero can't have negative healthPoints when created");
+            throw new InvalidPassedParametersToHeroException("A hero can't have negative healthPoints when created");
         }
     }
 
@@ -148,11 +153,11 @@ public abstract class Hero {
      * Validates the {@link Hero} armor points.
      *
      * @param armorPoints to be checked
-     * @throws InvalidHeroConstructorException when a hero is initialized with negative armor points.
+     * @throws InvalidPassedParametersToHeroException when a hero is initialized with negative armor points.
      */
-    private void validateArmorPoints(int armorPoints) throws InvalidHeroConstructorException {
+    private void validateArmorPoints(int armorPoints) throws InvalidPassedParametersToHeroException {
         if (armorPoints < 0) {
-            throw new InvalidHeroConstructorException("A hero can't have negative armorPoints");
+            throw new InvalidPassedParametersToHeroException("A hero can't have negative armorPoints");
         }
     }
 
@@ -189,8 +194,28 @@ public abstract class Hero {
      * @return The random number
      */
     public double getRandomChance() {
-        int randomChance = 100;
+        int randomChance = random.nextInt(100);
         return getValueInPercents(randomChance);
+    }
+
+    /**
+     * Checks if an attack is a critical attack
+     *
+     * @param criticalPercentage the percentage of a critical hit chance
+     * @return a boolean representing the kind of attack
+     */
+    public boolean isACriticalAttack(double criticalPercentage) {
+        return getRandomChance() <= criticalPercentage;
+    }
+
+    /**
+     * Check if a defense is a complete defense
+     *
+     * @param completeDefensePercentage the percentage chance of a complete defend.
+     * @return a boolean representing the kind of defense
+     */
+    public boolean isACompleteDefense(double completeDefensePercentage) {
+        return getRandomChance() <= completeDefensePercentage;
     }
 
     /**

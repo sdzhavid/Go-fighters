@@ -1,8 +1,6 @@
-package eu.deltasource.internship.heroes_tests;
+package eu.deltasource.internship.heroes;
 
-import eu.deltasource.internship.exceptions.InvalidHeroConstructorException;
-import eu.deltasource.internship.heroes.Assassin;
-import eu.deltasource.internship.heroes.Warrior;
+import eu.deltasource.internship.exceptions.InvalidPassedParametersToHeroException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.function.Executable;
@@ -17,7 +15,7 @@ class HeroTest {
         Executable heroZeroAttackPointsCreation = () -> new Warrior(0, 200, 300);
 
         // When
-        Exception actualException = assertThrows(InvalidHeroConstructorException.class,
+        Exception actualException = assertThrows(InvalidPassedParametersToHeroException.class,
                 heroZeroAttackPointsCreation);
 
         // Then
@@ -32,7 +30,7 @@ class HeroTest {
         Executable heroNegativeAttackPointsCreation = () -> new Assassin(-2, 200, 300);
 
         // When
-        Exception actualException = assertThrows(InvalidHeroConstructorException.class,
+        Exception actualException = assertThrows(InvalidPassedParametersToHeroException.class,
                 heroNegativeAttackPointsCreation);
 
         // Then
@@ -47,7 +45,7 @@ class HeroTest {
         Executable heroZeroHealthPointsCreation = () -> new Assassin(30, 0, 300);
 
         // When
-        Exception actualException = assertThrows(InvalidHeroConstructorException.class,
+        Exception actualException = assertThrows(InvalidPassedParametersToHeroException.class,
                 heroZeroHealthPointsCreation);
 
         // Then
@@ -62,7 +60,7 @@ class HeroTest {
         Executable heroNegativeHealthPointsCreation = () -> new Assassin(30, -2, 300);
 
         // When
-        Exception actualException = assertThrows(InvalidHeroConstructorException.class,
+        Exception actualException = assertThrows(InvalidPassedParametersToHeroException.class,
                 heroNegativeHealthPointsCreation);
 
         // Then
@@ -77,7 +75,7 @@ class HeroTest {
         Executable heroNegativeArmorPointsCreation = () -> new Assassin(30, 300, -3);
 
         // When
-        Exception actualException = assertThrows(InvalidHeroConstructorException.class,
+        Exception actualException = assertThrows(InvalidPassedParametersToHeroException.class,
                 heroNegativeArmorPointsCreation);
 
         // Then

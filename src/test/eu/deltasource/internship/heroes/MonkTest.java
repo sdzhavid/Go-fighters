@@ -1,8 +1,5 @@
-package eu.deltasource.internship.heroes_tests;
+package eu.deltasource.internship.heroes;
 
-import eu.deltasource.internship.heroes.Hero;
-import eu.deltasource.internship.heroes.Monk;
-import eu.deltasource.internship.heroes.Warrior;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
@@ -15,10 +12,12 @@ class MonkTest {
     private static final double LOWER_LIMIT_PERCENTAGE = 0.8;
     private static final double UPPER_LIMIT_PERCENTAGE = 1.2;
     Monk monk;
+    int startingHealthPoints;
 
     @BeforeEach
-    void initMonk() {
+    void initializeMonk() {
         monk = new Monk(100, 1000, 30);
+        startingHealthPoints = monk.getHealthPoints();
     }
 
     @Test
@@ -51,8 +50,8 @@ class MonkTest {
         int expectedMinimalDamageBeforeDefense = (int) (monk.getAttackPoints() * LOWER_LIMIT_PERCENTAGE);
         int expectedMaximumDamageBeforeDefense = (int) (monk.getAttackPoints() * UPPER_LIMIT_PERCENTAGE);
         int actualDamageBeforeDefense = monk.attack();
-        assertTrue(actualDamageBeforeDefense >= expectedMinimalDamageBeforeDefense &&
-                actualDamageBeforeDefense <= expectedMaximumDamageBeforeDefense);
+        assertTrue(actualDamageBeforeDefense >= expectedMinimalDamageBeforeDefense);
+        assertTrue(actualDamageBeforeDefense <= expectedMaximumDamageBeforeDefense);
     }
 
     @RepeatedTest(500)
@@ -60,23 +59,24 @@ class MonkTest {
         // Given
         Warrior warriorThatHasAttacked = new Warrior(2000, 300, 200);
         int damageInflictedBeforeDefense = warriorThatHasAttacked.attack();
-        int startingHealthPoints = monk.getHealthPoints();
 
         // When
         monk.defend(damageInflictedBeforeDefense);
 
         // Then
 
-        int expectedMinHealthRemaining = (int) (startingHealthPoints - (damageInflictedBeforeDefense -
-                monk.getArmorPoints() * LOWER_LIMIT_PERCENTAGE));
+        int expectedMinHealthRemaining = getHealthAtBorder(LOWER_LIMIT_PERCENTAGE, damageInflictedBeforeDefense);
 
-        int expectedMaxHealthRemaining = (int) (startingHealthPoints - (damageInflictedBeforeDefense -
-                monk.getArmorPoints() * UPPER_LIMIT_PERCENTAGE));
+        int expectedMaxHealthRemaining = getHealthAtBorder(UPPER_LIMIT_PERCENTAGE, damageInflictedBeforeDefense);
 
-        int actualHealthRemaining = (int) (startingHealthPoints - (damageInflictedBeforeDefense -
-                monk.getArmorPoints() * monk.getRandomPercentageBetween80And120()));
+        int actualHealthRemaining = getHealthAtBorder(monk.getRandomPercentageBetween80And120(),
+                damageInflictedBeforeDefense);
 
-        assertTrue(actualHealthRemaining >= expectedMinHealthRemaining &&
-                actualHealthRemaining <= expectedMaxHealthRemaining);
+        assertTrue(actualHealthRemaining >= expectedMinHealthRemaining);
+        assertTrue(actualHealthRemaining <= expectedMaxHealthRemaining);
+    }
+
+    private int getHealthAtBorder(double limitPercentage, int damageInflicted){
+        return (int) (startingHealthPoints - (damageInflicted - monk.getArmorPoints() * limitPercentage));
     }
 }

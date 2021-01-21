@@ -15,7 +15,7 @@ import eu.deltasource.internship.heroes.special.abilities.SpecialAttack;
 public class Assassin extends Hero implements SpecialAttack {
 
     private static final double CRITICAL_PERCENTAGE = 0.3;
-    private static final double CRITICAL_HIT_INCREASE = 3;
+    private static final double CRITICAL_HIT_MULTIPLIER = 3;
 
     private String heroType;
 
@@ -28,7 +28,14 @@ public class Assassin extends Hero implements SpecialAttack {
      */
     public Assassin(int attackPoints, int healthPoints, int armorPoints) {
         super(attackPoints, healthPoints, armorPoints);
-        this.heroType = "Assassin";
+        this.heroType = this.getClass().getSimpleName();
+    }
+
+    /**
+     * Creates an assassin with default values for {@see attackPoints}, {@see healthPoints} and {@see armorPoints}
+     */
+    public Assassin() {
+        this(150, 1000, 100);
     }
 
     @Override
@@ -44,8 +51,8 @@ public class Assassin extends Hero implements SpecialAttack {
      */
     @Override
     public int attack() {
-        if (getRandomChance() <= CRITICAL_PERCENTAGE) {
-            specialAttack();
+        if (isACriticalAttack(CRITICAL_PERCENTAGE)) {
+            return specialAttack();
         }
         return super.attack();
     }
@@ -58,6 +65,6 @@ public class Assassin extends Hero implements SpecialAttack {
      */
     @Override
     public int specialAttack() {
-        return (int) (super.attack() * CRITICAL_HIT_INCREASE);
+        return (int) (super.attack() * CRITICAL_HIT_MULTIPLIER);
     }
 }
