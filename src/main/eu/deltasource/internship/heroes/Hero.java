@@ -16,8 +16,8 @@ import java.util.Random;
  */
 public abstract class Hero {
 
-    private final static int numberToDetermineRandomUpperBorder = 41;
-    private final static int numberToDetermineRandomLowerBorder = 80;
+    private final static int NUMBER_TO_DETERMINE_RANDOM_UPPER_BORDER = 41;
+    private final static int NUMBER_TO_DETERMINE_RANDOM_LOWER_BORDER = 80;
 
     private Random random = new Random();
     private int attackPoints;
@@ -89,8 +89,8 @@ public abstract class Hero {
      * @return the random percentage,
      */
     public double getRandomPercentageBetween80And120() {
-        double randomPercentageOfDamageInflicted = random.nextInt(numberToDetermineRandomUpperBorder)
-                + numberToDetermineRandomLowerBorder;
+        double randomPercentageOfDamageInflicted = random.nextInt(NUMBER_TO_DETERMINE_RANDOM_UPPER_BORDER)
+                + NUMBER_TO_DETERMINE_RANDOM_LOWER_BORDER;
         return getValueInPercents(randomPercentageOfDamageInflicted);
     }
 

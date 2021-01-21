@@ -8,9 +8,9 @@ import static org.mockito.Mockito.*;
 
 class AssassinTest {
     private Assassin assassin;
-    private int DAMAGE_INCREASE_MULTIPLIER = 3;
-    private double LOWER_LIMIT_PERCENTAGE = 0.8;
-    private double UPPER_LIMIT_PERCENTAGE = 1.2;
+    private static final int DAMAGE_INCREASE_MULTIPLIER = 3;
+    private static final double LOWER_LIMIT_PERCENTAGE = 0.8;
+    private static final double UPPER_LIMIT_PERCENTAGE = 1.2;
     private int startingHealthPoints;
     private Warrior warriorThatHasAttacked = new Warrior(2000, 300, 200);;
 

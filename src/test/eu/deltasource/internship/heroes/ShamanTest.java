@@ -11,18 +11,18 @@ import static org.mockito.Mockito.when;
 class ShamanTest {
     private Shaman shaman;
     private static final double DAMAGE_TAKEN_MULTIPLIER = 1.2;
-    private double LOWER_LIMIT_PERCENTAGE = 0.8;
-    private double UPPER_LIMIT_PERCENTAGE = 1.2;
+    private static final double LOWER_LIMIT_PERCENTAGE = 0.8;
+    private static final double UPPER_LIMIT_PERCENTAGE = 1.2;
     private int startingHealthPoints;
 
     @BeforeEach
-    void initializeShaman(){
-        shaman = new Shaman(100,2000,100);
+    void initializeShaman() {
+        shaman = new Shaman(100, 2000, 100);
         startingHealthPoints = shaman.getHealthPoints();
     }
 
     @RepeatedTest(10)
-    void testShamanNormalDefenseFromHeroShouldReturnCorrectHealthPointsIncreasedByTwentyPercent(){
+    void testShamanNormalDefenseFromHeroShouldReturnCorrectHealthPointsIncreasedByTwentyPercent() {
         // Given
         Warrior warriorThatHasAttacked = new Warrior(2000, 300, 200);
         int damageInflictedBeforeDefense = warriorThatHasAttacked.attack();
@@ -41,13 +41,14 @@ class ShamanTest {
         assertTrue(actualHealthRemaining >= expectedMinHealthRemaining);
         assertTrue(actualHealthRemaining <= expectedMaxHealthRemaining);
     }
-    private int getHealthAtBorder(double limitPercentage, int damageInflicted){
+
+    private int getHealthAtBorder(double limitPercentage, int damageInflicted) {
         return (int) (startingHealthPoints - (damageInflicted - shaman.getArmorPoints() * limitPercentage)
-        * DAMAGE_TAKEN_MULTIPLIER);
+                * DAMAGE_TAKEN_MULTIPLIER);
     }
 
     @Test
-    void testShamanNormalAttackShouldReturnProperDamageInflicted(){
+    void testShamanNormalAttackShouldReturnProperDamageInflicted() {
         // Given
         Hero hero = spy(shaman);
         double chanceAboveCritical = 0.8;
@@ -65,7 +66,7 @@ class ShamanTest {
     }
 
     @Test
-    void shamanDoubleAttackShouldReturnProperDamageInflicted(){
+    void shamanDoubleAttackShouldReturnProperDamageInflicted() {
         // Given
         Hero hero = spy(shaman);
 
@@ -80,6 +81,6 @@ class ShamanTest {
                 * 2);
         int actualDamageBeforeDefense = hero.attack();
         assertTrue(actualDamageBeforeDefense >= expectedMinimalDamageBeforeDefense);
-        assertTrue(actualDamageBeforeDefense<= expectedMaximumDamageBeforeDefense);
+        assertTrue(actualDamageBeforeDefense <= expectedMaximumDamageBeforeDefense);
     }
 }

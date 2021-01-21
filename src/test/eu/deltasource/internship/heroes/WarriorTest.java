@@ -7,9 +7,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class WarriorTest {
     private Warrior warrior;
-    private double LOWER_LIMIT_PERCENTAGE = 0.8;
-    private double UPPER_LIMIT_PERCENTAGE = 1.2;
-    int startingHealthPoints;
+    private static final double LOWER_LIMIT_PERCENTAGE = 0.8;
+    private static final double UPPER_LIMIT_PERCENTAGE = 1.2;
+    private int startingHealthPoints;
 
     @BeforeEach
     void initializeWarrior() {

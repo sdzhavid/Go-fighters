@@ -9,10 +9,11 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 class MonkTest {
+
     private static final double LOWER_LIMIT_PERCENTAGE = 0.8;
     private static final double UPPER_LIMIT_PERCENTAGE = 1.2;
-    Monk monk;
-    int startingHealthPoints;
+    private Monk monk;
+    private int startingHealthPoints;
 
     @BeforeEach
     void initializeMonk() {
@@ -76,7 +77,7 @@ class MonkTest {
         assertTrue(actualHealthRemaining <= expectedMaxHealthRemaining);
     }
 
-    private int getHealthAtBorder(double limitPercentage, int damageInflicted){
+    private int getHealthAtBorder(double limitPercentage, int damageInflicted) {
         return (int) (startingHealthPoints - (damageInflicted - monk.getArmorPoints() * limitPercentage));
     }
 }

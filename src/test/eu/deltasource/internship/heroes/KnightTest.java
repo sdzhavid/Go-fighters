@@ -9,9 +9,9 @@ import static org.mockito.Mockito.when;
 
 class KnightTest {
     private Knight knight;
-    private int DAMAGE_INCREASE_MULTIPLIER = 2;
-    private double LOWER_LIMIT_PERCENTAGE = 0.8;
-    private double UPPER_LIMIT_PERCENTAGE = 1.2;
+    private static final int DAMAGE_INCREASE_MULTIPLIER = 2;
+    private static final double LOWER_LIMIT_PERCENTAGE = 0.8;
+    private static final double UPPER_LIMIT_PERCENTAGE = 1.2;
     int startingHealthPoints;
 
     @BeforeEach
@@ -55,7 +55,7 @@ class KnightTest {
                 * DAMAGE_INCREASE_MULTIPLIER);
         int actualDamageBeforeDefense = hero.attack();
         assertTrue(actualDamageBeforeDefense >= expectedMinimalDamageBeforeDefense);
-        assertTrue(actualDamageBeforeDefense<= expectedMaximumDamageBeforeDefense);
+        assertTrue(actualDamageBeforeDefense <= expectedMaximumDamageBeforeDefense);
     }
 
     @RepeatedTest(500)
@@ -98,7 +98,7 @@ class KnightTest {
         assertTrue(actualHealthRemaining <= expectedMaxHealthRemaining);
     }
 
-    private int getHealthAtBorder(double limitPercentage, int damageInflicted){
+    private int getHealthAtBorder(double limitPercentage, int damageInflicted) {
         return (int) (startingHealthPoints - (damageInflicted - knight.getArmorPoints() * limitPercentage));
     }
 }
