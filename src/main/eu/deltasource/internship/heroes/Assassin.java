@@ -44,6 +44,14 @@ public class Assassin extends Hero implements SpecialAttack {
     }
 
     /**
+     * Method is used when there are 2 heroes of the same class in the arena.
+     */
+    @Override
+    public void setHeroTypeToSecond() {
+        this.heroType = "Second " + getHeroType();
+    }
+
+    /**
      * Attacks the other hero with a {@see CRITICAL_PERCENTAGE} chance to do a critical hit
      * A critical hit is {@see CRITICAL_HIT_INCREASE} of the normal damage dealt
      *

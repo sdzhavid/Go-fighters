@@ -21,7 +21,7 @@ public class GameEngine {
 
     /**
      * Starts the game by initializing the two heroes when given as parameters.
-     * The game continues until one of the heroes has died which is done by {@link GameEngine#heroIsKilled(Hero, Hero)}
+     * The game continues until one of the heroes has died which is done by {@link GameEngine#isHeroKilled(Hero)}
      * Each round is printed to the console by {@link GameEngine#printRound(Hero, int, Hero)}
      *
      * @param firstHero  to enter the arena
@@ -29,6 +29,9 @@ public class GameEngine {
      * @throws InterruptedException if the game was been interrupted during the fight.
      */
     public void startGame(Hero firstHero, Hero secondHero) throws InterruptedException {
+        if (areHeroesOfSameType(firstHero, secondHero)) {
+            secondHero.setHeroTypeToSecond();
+        }
         printStartGameMessage(firstHero, secondHero);
         while (isGameOn) {
             timeBetweenRounds(TIME_BETWEEN_ROUNDS_MILLISECONDS);
@@ -49,6 +52,17 @@ public class GameEngine {
                 break;
             }
         }
+    }
+
+    /**
+     * Performs a check to see if the two heroes are of the same class.
+     *
+     * @param firstHero  Hero to be checked
+     * @param secondHero Hero to be checked
+     * @return a boolean value representing if they are of the same class.
+     */
+    private boolean areHeroesOfSameType(Hero firstHero, Hero secondHero) {
+        return firstHero.equals(secondHero);
     }
 
     /**
@@ -84,7 +98,7 @@ public class GameEngine {
     /**
      * Displays a welcoming message when the game begins
      *
-     * @param firstHero to be displayed
+     * @param firstHero  to be displayed
      * @param secondHero to be displayed
      */
     private void printStartGameMessage(Hero firstHero, Hero secondHero) {

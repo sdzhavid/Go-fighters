@@ -2,6 +2,9 @@ package eu.deltasource.internship.heroes;
 
 import eu.deltasource.internship.heroes.special.abilities.SpecialDefense;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * A monk which is a {@link Hero} with a special defense.
  * <p>
@@ -44,6 +47,14 @@ public class Monk extends Hero implements SpecialDefense {
     }
 
     /**
+     * Method is used when there are 2 heroes of the same class in the arena.
+     */
+    @Override
+    public void setHeroTypeToSecond() {
+        this.heroType = "Second " + getHeroType();
+    }
+
+    /**
      * Defends the hero, applying the armor resistance of the hero to the attack.
      * Also has {@see DODGE_CHANCE} chance to avoid all incoming damage for this round.
      *
@@ -67,5 +78,11 @@ public class Monk extends Hero implements SpecialDefense {
     @Override
     public int specialDefense() {
         return super.defend(ZERO_DAMAGE_INFLICTED);
+    }
+
+    public static void main(String[] args) {
+        List<Integer> ages = new ArrayList<>();
+
+
     }
 }

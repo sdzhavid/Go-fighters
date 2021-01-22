@@ -45,6 +45,14 @@ public class Shaman extends Hero implements SpecialAttack {
     }
 
     /**
+     * Method is used when there are 2 heroes of the same class in the arena.
+     */
+    @Override
+    public void setHeroTypeToSecond() {
+        this.heroType = "Second " + getHeroType();
+    }
+
+    /**
      * Attacks the other hero with a chance of a double attack of {@see DOUBLE_ATTACK_CHANCE}
      * A double attack is a normal attack with the damage multiplied by 2.
      *

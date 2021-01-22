@@ -35,6 +35,14 @@ public class Warrior extends Hero {
         return heroType;
     }
 
+    /**
+     * Method is used when there are 2 heroes of the same class in the arena.
+     */
+    @Override
+    public void setHeroTypeToSecond() {
+        this.heroType = "Second " + getHeroType();
+    }
+
     public static void main(String[] args) {
         Warrior warrior = new Warrior(100,2,3);
         System.out.println(warrior.attack());

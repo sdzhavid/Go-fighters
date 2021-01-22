@@ -2,6 +2,7 @@ package eu.deltasource.internship.heroes;
 
 import eu.deltasource.internship.exceptions.InvalidPassedParametersToHeroException;
 
+import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -24,6 +25,7 @@ public abstract class Hero {
     private int healthPoints;
     private int armorPoints;
     private boolean isHeroAlive;
+    private String heroType;
 
     /**
      * Constructs a Hero with the specified attributes.
@@ -37,6 +39,7 @@ public abstract class Hero {
         this.attackPoints = attackPoints;
         this.healthPoints = healthPoints;
         this.armorPoints = armorPoints;
+        this.heroType = Hero.class.getName();
         isHeroAlive = true;
     }
 
@@ -67,6 +70,24 @@ public abstract class Hero {
     }
 
     public abstract String getHeroType();
+
+    /**
+     * Adds a "Second" to the heroType if there are two of the same classes in the arena.
+     */
+    public abstract void setHeroTypeToSecond();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Hero hero = (Hero) o;
+        return heroType.equals(hero.heroType);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(attackPoints, healthPoints, armorPoints);
+    }
 
     /**
      * Reduces the health points by the damage dealt from an attack.
