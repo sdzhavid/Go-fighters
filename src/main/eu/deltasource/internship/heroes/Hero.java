@@ -79,14 +79,14 @@ public abstract class Hero {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o instanceof String) return false;
         Hero hero = (Hero) o;
         return heroType.equals(hero.heroType);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(attackPoints, healthPoints, armorPoints);
+        return Objects.hash(attackPoints, healthPoints, armorPoints, heroType);
     }
 
     /**
