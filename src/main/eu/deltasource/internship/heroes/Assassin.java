@@ -17,8 +17,6 @@ public class Assassin extends Hero implements SpecialAttack {
     private static final double CRITICAL_PERCENTAGE = 0.3;
     private static final double CRITICAL_HIT_MULTIPLIER = 3;
 
-    private String heroType;
-
     /**
      * Constructs a Hero with the specified attributes.
      *
@@ -27,8 +25,7 @@ public class Assassin extends Hero implements SpecialAttack {
      * @param armorPoints  the Armor Points of the Hero.
      */
     public Assassin(int attackPoints, int healthPoints, int armorPoints) {
-        super(attackPoints, healthPoints, armorPoints);
-        this.heroType = this.getClass().getSimpleName();
+        super(attackPoints, healthPoints, armorPoints, HeroType.ASSASSIN);
     }
 
     /**
@@ -36,19 +33,6 @@ public class Assassin extends Hero implements SpecialAttack {
      */
     public Assassin() {
         this(150, 1000, 100);
-    }
-
-    @Override
-    public String getHeroType() {
-        return heroType;
-    }
-
-    /**
-     * Method is used when there are 2 heroes of the same class in the arena.
-     */
-    @Override
-    public void setHeroTypeToSecond() {
-        this.heroType = "Second " + getHeroType();
     }
 
     /**

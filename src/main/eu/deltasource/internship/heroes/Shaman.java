@@ -18,8 +18,6 @@ public class Shaman extends Hero implements SpecialAttack {
     private static final double DOUBLE_ATTACK_CHANCE = 0.7;
     private static final double DAMAGE_TAKEN_MULTIPLIER = 1.2;
 
-    private String heroType;
-
     /**
      * Constructs a Hero with the specified attributes.
      *
@@ -28,8 +26,7 @@ public class Shaman extends Hero implements SpecialAttack {
      * @param armorPoints  the Armor Points of the Hero.
      */
     public Shaman(int attackPoints, int healthPoints, int armorPoints) {
-        super(attackPoints, healthPoints, armorPoints);
-        this.heroType = this.getClass().getSimpleName();
+        super(attackPoints, healthPoints, armorPoints, HeroType.SHAMAN);
     }
 
     /**
@@ -37,19 +34,6 @@ public class Shaman extends Hero implements SpecialAttack {
      */
     public Shaman() {
         this(100, 1000, 200);
-    }
-
-    @Override
-    public String getHeroType() {
-        return heroType;
-    }
-
-    /**
-     * Method is used when there are 2 heroes of the same class in the arena.
-     */
-    @Override
-    public void setHeroTypeToSecond() {
-        this.heroType = "Second " + getHeroType();
     }
 
     /**

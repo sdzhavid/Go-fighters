@@ -20,8 +20,6 @@ public class Monk extends Hero implements SpecialDefense {
     private static final double DODGE_CHANCE = 0.3;
     private static final int ZERO_DAMAGE_INFLICTED = 0;
 
-    private String heroType;
-
     /**
      * Constructs a Hero with the specified attributes.
      *
@@ -30,8 +28,7 @@ public class Monk extends Hero implements SpecialDefense {
      * @param armorPoints  the Armor Points of the Hero.
      */
     public Monk(int attackPoints, int healthPoints, int armorPoints) {
-        super(attackPoints, healthPoints, armorPoints);
-        this.heroType = this.getClass().getSimpleName();
+        super(attackPoints, healthPoints, armorPoints, HeroType.MONK);
     }
 
     /**
@@ -39,19 +36,6 @@ public class Monk extends Hero implements SpecialDefense {
      */
     public Monk() {
         this(200, 1200, 150);
-    }
-
-    @Override
-    public String getHeroType() {
-        return heroType;
-    }
-
-    /**
-     * Method is used when there are 2 heroes of the same class in the arena.
-     */
-    @Override
-    public void setHeroTypeToSecond() {
-        this.heroType = "Second " + getHeroType();
     }
 
     /**

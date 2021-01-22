@@ -12,8 +12,6 @@ package eu.deltasource.internship.heroes;
  */
 public class Warrior extends Hero {
 
-    private String heroType;
-
     /**
      * Constructs a Hero with the specified attributes.
      *
@@ -22,29 +20,15 @@ public class Warrior extends Hero {
      * @param armorPoints  the Armor Points of the Hero.
      */
     public Warrior(int attackPoints, int healthPoints, int armorPoints) {
-        super(attackPoints, healthPoints, armorPoints);
-        this.heroType = this.getClass().getSimpleName();
+        super(attackPoints, healthPoints, armorPoints, HeroType.WARRIOR);
     }
 
     public Warrior() {
         this(200, 2000, 150);
     }
 
-    @Override
-    public String getHeroType() {
-        return heroType;
-    }
-
-    /**
-     * Method is used when there are 2 heroes of the same class in the arena.
-     */
-    @Override
-    public void setHeroTypeToSecond() {
-        this.heroType = "Second " + getHeroType();
-    }
-
     public static void main(String[] args) {
-        Warrior warrior = new Warrior(100,2,3);
+        Warrior warrior = new Warrior(100, 2, 3);
         System.out.println(warrior.attack());
     }
 }

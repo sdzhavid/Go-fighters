@@ -2,7 +2,6 @@ package eu.deltasource.internship.heroes;
 
 import eu.deltasource.internship.exceptions.InvalidPassedParametersToHeroException;
 
-import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -20,12 +19,12 @@ public abstract class Hero {
     private final static int NUMBER_TO_DETERMINE_RANDOM_UPPER_BORDER = 41;
     private final static int NUMBER_TO_DETERMINE_RANDOM_LOWER_BORDER = 80;
 
+    private HeroType heroType;
     private Random random = new Random();
     private int attackPoints;
     private int healthPoints;
     private int armorPoints;
     private boolean isHeroAlive;
-    private String heroType;
 
     /**
      * Constructs a Hero with the specified attributes.
@@ -34,19 +33,13 @@ public abstract class Hero {
      * @param healthPoints the Health Points of the Hero.
      * @param armorPoints  the Armor Points of the Hero.
      */
-    public Hero(int attackPoints, int healthPoints, int armorPoints) {
+    public Hero(int attackPoints, int healthPoints, int armorPoints, HeroType heroType) {
         validateHero(attackPoints, healthPoints, armorPoints);
         this.attackPoints = attackPoints;
         this.healthPoints = healthPoints;
         this.armorPoints = armorPoints;
-        this.heroType = Hero.class.getName();
+        this.heroType = heroType;
         isHeroAlive = true;
-    }
-
-    /**
-     * An empty constructor used for creating heroes with default values.
-     */
-    public Hero() {
     }
 
     public int getAttackPoints() {
@@ -69,24 +62,8 @@ public abstract class Hero {
         this.isHeroAlive = isDead;
     }
 
-    public abstract String getHeroType();
-
-    /**
-     * Adds a "Second" to the heroType if there are two of the same classes in the arena.
-     */
-    public abstract void setHeroTypeToSecond();
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o instanceof String) return false;
-        Hero hero = (Hero) o;
-        return heroType.equals(hero.heroType);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(attackPoints, healthPoints, armorPoints, heroType);
+    public String getHeroType() {
+        return heroType.heroType;
     }
 
     /**

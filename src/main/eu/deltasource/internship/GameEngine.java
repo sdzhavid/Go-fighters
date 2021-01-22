@@ -29,9 +29,6 @@ public class GameEngine {
      * @throws InterruptedException if the game was been interrupted during the fight.
      */
     public void startGame(Hero firstHero, Hero secondHero) throws InterruptedException {
-        if (areHeroesOfSameType(firstHero, secondHero)) {
-            secondHero.setHeroTypeToSecond();
-        }
         printStartGameMessage(firstHero, secondHero);
         while (isGameOn) {
             timeBetweenRounds(TIME_BETWEEN_ROUNDS_MILLISECONDS);
@@ -52,17 +49,6 @@ public class GameEngine {
                 break;
             }
         }
-    }
-
-    /**
-     * Performs a check to see if the two heroes are of the same class.
-     *
-     * @param firstHero  Hero to be checked
-     * @param secondHero Hero to be checked
-     * @return a boolean value representing if they are of the same class.
-     */
-    private boolean areHeroesOfSameType(Hero firstHero, Hero secondHero) {
-        return firstHero.equals(secondHero);
     }
 
     /**

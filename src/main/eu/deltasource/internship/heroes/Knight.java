@@ -21,8 +21,6 @@ public class Knight extends Hero implements SpecialAttack, SpecialDefense {
     private static final double CRITICAL_HIT_MULTIPLIER = 2;
     private static final int ZERO_DAMAGE_INFLICTED = 0;
 
-    private String heroType;
-
     /**
      * Constructs a Hero with the specified attributes.
      *
@@ -31,28 +29,14 @@ public class Knight extends Hero implements SpecialAttack, SpecialDefense {
      * @param armorPoints  the Armor Points of the Hero.
      */
     public Knight(int attackPoints, int healthPoints, int armorPoints) {
-        super(attackPoints, healthPoints, armorPoints);
-        this.heroType = this.getClass().getSimpleName();
+        super(attackPoints, healthPoints, armorPoints, HeroType.KNIGHT);
     }
 
     /**
      * Creates a knight with default values for {@see attackPoints}, {@see healthPoints} and {@see armorPoints}
      */
     public Knight() {
-        this(90, 1600, 150);
-    }
-
-    @Override
-    public String getHeroType() {
-        return heroType;
-    }
-
-    /**
-     * Method is used when there are 2 heroes of the same class in the arena.
-     */
-    @Override
-    public void setHeroTypeToSecond() {
-        this.heroType = "Second " + getHeroType();
+        this(60, 1600, 120);
     }
 
     /**
